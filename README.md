@@ -100,6 +100,22 @@ docker compose up -d          # 拉取 tomicdd/artex 镜像 + postgres
 `/message?sessionId=...` 接收 JSON-RPC 请求；配置时将 URL 填为 `/sse`，请求头按
 `Authorization=Bearer <token>` 填写。
 
+#### Parallel Search MCP（可选）
+
+启动后，MCP 列表会预置 `parallel-search`，默认禁用且不绑定任何 Agent。
+在系统配置的 MCP 管理中启用它，再在 Agent 管理中将其设为该 Agent 可见，
+即可通过现有 MCP 工具加载流程使用 `web_search` 和 `web_fetch`，查阅公开技术文档。
+[Parallel Search MCP](https://docs.parallel.ai/integrations/mcp/search-mcp)
+使用 Streamable HTTP（`https://search.parallel.ai/mcp`），无需账户或 API Key；
+匿名搜索使用 Fast 模式，免费额度适合轻量使用，超额时会返回错误。
+查询、传入的 URL 和抓取请求会发送给 Parallel，请勿提交本地实验中的敏感数据。
+
+该 MCP 独立于内置 `web_search` 的全局及 Agent 开关，由 MCP 的启用、可见性和
+现有审批规则控制。DDGS 默认后端及已保存的搜索配置保持不变；修改、禁用或删除
+此预置后，重启不会覆盖或恢复它。需要更高额度时可自行在 HTTP 请求头中添加
+`Authorization=Bearer <Parallel API Key>`，保留预置的 `User-Agent`。
+该预置不注入 `session_id`；可选的会话标识由调用方管理。
+
 ### 方式三：从源码编译单二进制
 
 ```bash
